@@ -1,63 +1,67 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const Item = ({
-  index,
-  name,
-  cost,
-  value,
-  numOwned,
-  handleAttemptedPurchase,
-}) => {
-  const ref = React.useRef(null);
+const Item = (props) => {
+  const { item, numOwned, handleClick, first } = props;
+  const { name, cost, value, id } = item;
+  const NameRef = useRef(null);
 
-  React.useEffect(() => {
-    if (index === 0) {
-      ref.current.focus();
+  useEffect(() => {
+    if (first) {
+      NameRef.current.focus();
     }
-  }, [index]);
+  }, []);
+
+  let rate = id != "megacursor" ? "second" : "click"
 
   return (
-    <Wrapper ref={ref} onClick={handleAttemptedPurchase}>
-      <Left>
-        <Name>{name}</Name>
-        <Info>
-          Cost: {cost} cookie(s). Produces {value} cookies/second.
-        </Info>
-      </Left>
-      <Right>{numOwned}</Right>
+    <Wrapper>
+      <button ref={NameRef} onClick={handleClick} >
+        <ListItem>
+          <ItemName>
+            <h1>{name}</h1>
+            <p>
+  Cost: {cost} cookie(s). Produces {value} cookies/{rate}.
+            </p>
+          </ItemName>
+          <Count>{numOwned}</Count>
+        </ListItem>
+      </button>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.button`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #444;
-  color: #fff;
-  text-align: left;
-  padding: 15px 0;
-`;
-
-const Left = styled.div`
-  flex: 1;
-`;
-
-const Name = styled.h4`
-  font-size: 22px;
-`;
-
-const Info = styled.div`
-  color: #ccc;
-  font-size: 15px;
-`;
-
-const Right = styled.div`
-  font-size: 32px;
-  padding: 0 20px;
-`;
-
 export default Item;
+
+const Wrapper = styled.div`
+  display: flex;
+  button {
+    text-align: left;
+    background-color: #222222;
+    color: white;
+    border: none;
+  }
+`;
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid grey;
+  padding: 10px 0 10px 0;
+  width: 450px;
+  p {
+    font-size: 16px;
+    color: grey;
+  }
+`;
+
+const Count = styled.span`
+  font-size: 36px;
+  margin-right: 10px;
+`;
+
+const ItemName = styled.div`
+  h1 {
+    font-size: 26px;
+    padding-bottom: 2px;
+  }
+`;
